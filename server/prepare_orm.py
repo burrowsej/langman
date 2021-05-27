@@ -15,13 +15,19 @@ app = Flask(__name__)
 # when we run `flask init-db`
 @app.cli.command('init-db')
 def init_db():
+    # get the environment variables for the db from config.yaml
     config = get_config(os.environ['FLASK_ENV'],
                         open('server/config.yaml'))
+    
+    # create the Usage database
     db_usage = create_engine(config['DB_USAGE'])
     base_usage.metadata.create_all(db_usage)
+
+    # create the Games database
     db_games = create_engine(config['DB_GAMES'])
     base_games.metadata.create_all(db_games)
 
+    # start a session, load usage data in from csv if missing
     Session = sessionmaker(db_usage)
     session = Session()
     if session.query(Usage).count() == 0:

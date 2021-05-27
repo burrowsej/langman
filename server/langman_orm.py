@@ -15,8 +15,9 @@ class Usage(base_usage):
 
     __tablename__ = 'usages'
     usage_id = Column(types.Integer, primary_key=True)
-    language = Column(types.Enum("en", "es", "fr", name='language_codes'),
-                      nullable=False)
+    language = Column(
+        types.Enum("en", "es", "fr",
+        name='language_codes'),nullable=False)
     secret_word = Column(types.String(length=25), nullable=False)
     usage = Column(types.String(length=500), nullable=False)
     source = Column(types.String(length=100))
