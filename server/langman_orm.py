@@ -77,7 +77,7 @@ class User(base_games):
         active game to have outcome ``outcome``. (Does not commit.)'''
         self._decr_json_field('outcomes', 'active')
         self._inc_json_field('outcomes', 'outcome')
-        self.total_time = time_delta + (self.total_time) or datetime.timedelta(0)
+        self.total_time = time_delta + (self.total_time or datetime.timedelta(0))
         self.avg_time = self.total_time / self.num_games
 
 class Game(base_games):
