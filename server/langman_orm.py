@@ -1,5 +1,9 @@
+from server.util import get_config
 from sqlalchemy import create_engine, Column, types, MetaData, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
+import datetime
+import json
+
 meta = MetaData()
 base_games = declarative_base(meta)
 base_usage = declarative_base(meta)
@@ -43,6 +47,36 @@ class User(base_games):
     first_time = Column(types.DateTime)
     total_time = Column(types.Interval)
     avg_time = Column(types.Interval)
+
+    def _inc_json_field(self, field, key):
+        '''Increment the value of self.``field``[``key``] by one where 
+        ``field`` is a JSON text string. (Does not commit.)'''
+        d = json.loads(getattr(self, field))
+        d[key] = d.get(key, 0) + 1
+        setattr(self, field, json.dumps(d))
+    
+    def _decr_json_field(self, field, key):
+        '''Decrement the value of self.``field``[``key``] by one where 
+        ``field`` is a JSON text string. (Does not commit.)'''
+        d = json.loads(getattr(self, field))
+        d[key] = d.get(key, 0) - 1
+        setattr(self, field, json.dumps(d))
+    
+    def _game_started(self, lang):
+        '''Update the number of games ``num_games`` and both ``outcomes`` and 
+        ``by_lang`` counts by one. (Does not commit.)'''
+        self.num_games = (self.num_games or 0) + 1
+        self._inc_json_field('outcomes', 'active')
+        self._inc_json_field('by_lang', lang)
+    
+    def _game_ended(self, outcome, time_delta):
+        '''Update the ``total_time`` and ``avg_time`` according to a game that 
+        took ``time delta`` time. Also, update ``outcomes`` by converting one 
+        active game to have outcome ``outcome``. (Does not commit.)'''
+        self._decr_json_field('outcomes', 'active')
+        self._inc_json_field('outcomes', 'outcome')
+        self.total_time = time_delta + (self.total_time) or datetime.timedelta(0)
+        self.avg_time = self.total_time / self.num_games
 
 class Game(base_games):
     '''Table ``games`` with fields:
