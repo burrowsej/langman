@@ -20,6 +20,7 @@ from sqlalchemy.sql import func
 import datetime
 import random
 import uuid
+from unidecode import unidecode
 
 from .util import get_config
 from .langman_orm import Usage, User, Game
@@ -181,9 +182,9 @@ class OneGame(Resource):
         game.guessed = game.guessed + letter
         usage = g.usage_db.query(Usage).filter(
             Usage.usage_id == game.usage_id).one()
-        if letter in usage.secret_word.lower():
+        if letter in unidecode(usage.secret_word.lower()):
             game.reveal_word = ''.join(
-                [l if l.lower() in game.guessed else '_' for l in usage.secret_word])
+                [l if unidecode(l.lower()) in game.guessed else '_' for l in usage.secret_word])
         else:
             game.bad_guesses += 1
         
@@ -208,9 +209,26 @@ class OneGame(Resource):
         return game_dict
 
     def delete(self, game_id):
-        '''End the game, delete the record'''
-        return {'message': 'Game DELETE under construction'}
-
+        '''Delete record for game ``game_id``
+        
+        :route: ``/<game_id>`` DELETE
+        
+        :returns:
+            An acknowledgement object:
+                * ``message`` Either 'One' or 'Zero' records deleted
+        
+        This method removed the game from its table
+        '''
+        game = g.games_db.query(Game).filter(
+            Game.game_id==game_id).one_or_none()
+        if game is not None:
+            g.games_db.delete(game)
+            g.games_db.commit()
+            msg = 'One record deleted'
+        else:
+            msg = 'Zero records deleted'
+        
+        return {'message': msg}
 
 # create the app and configure it
 app = Flask(__name__)
