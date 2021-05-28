@@ -1,6 +1,6 @@
 import os
 import yaml
-
+import datetime
 
 def get_config(env, config_resource):
     # load config options for the given environment
@@ -20,3 +20,14 @@ def get_config(env, config_resource):
             config_dict[key] = os.environ[value[4:]]
     # Put the values into the application config
     return config_dict
+
+def date_to_ordinal(dt):
+    '''Given a DateTime or None value ``dt``, return either None or the 
+    ordinal value for that DateTime. Used for preparing to serialize to 
+    JSON.'''
+    if dt is None:
+        return None
+    elif isinstance(dt, datetime.datetime):
+        return dt.toordinal()
+    else:
+        return 'unknown'
