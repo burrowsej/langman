@@ -10,6 +10,7 @@ import {
   PlayAgainPanel,
 } from "../buttons";
 import { Banner, ResultBanner, UsageAndBlanks } from "../components";
+import { Gallows } from "../gallows";
 
 addDecorator((s) => (
   <>
@@ -105,38 +106,60 @@ storiesOf("Banners and Displays", module)
     </div>
   ))
   .add("ResultBanner", () => (
-      <div>
-          <h2>ResultBanner(winResult)</h2>
-          <ul>
-              <li>winResult - truthy means the player won, otherwise the player lost</li>
-          </ul>
-          <h3>Player won the game</h3>
-          <ResultBanner winResult={true}/>
-          <h3>Player lost the game</h3>
-          <ResultBanner/>
-      </div>
+    <div>
+      <h2>ResultBanner(winResult)</h2>
+      <ul>
+        <li>
+          winResult - truthy means the player won, otherwise the player lost
+        </li>
+      </ul>
+      <h3>Player won the game</h3>
+      <ResultBanner winResult={true} />
+      <h3>Player lost the game</h3>
+      <ResultBanner />
+    </div>
   ))
   .add("UsageAndBlanks", () => (
-      <div>
-          <h2>UsageAndBlanks(usage, blanks, showBlanks)</h2>
-          <p>This component uses the non-React function prepareUsage.</p>
-          <ul>
-              <li>
-                  usage - usage example with guess word as underscores
-              </li>
-              <li>blanks - guessed/non-guessed letters, like "h_ml_t"</li>
-              <li>showBlanks - whether to show blanks separately or in usage</li>
-          </ul>
-          <h3>With blanks</h3>
-          <UsageAndBlanks
-          usage="The sky loomed dark and ______."
-          blanks="__oo_y"
-          showBlanks={true}
-          />
-          <UsageAndBlanks
-          usage="The sky loomed dark and ______."
-          blanks="gloomy"
-          showBlanks={false}
-          />
-      </div>
+    <div>
+      <h2>UsageAndBlanks(usage, blanks, showBlanks)</h2>
+      <p>This component uses the non-React function prepareUsage.</p>
+      <ul>
+        <li>usage - usage example with guess word as underscores</li>
+        <li>blanks - guessed/non-guessed letters, like "h_ml_t"</li>
+        <li>showBlanks - whether to show blanks separately or in usage</li>
+      </ul>
+      <h3>With blanks</h3>
+      <UsageAndBlanks
+        usage="The sky loomed dark and ______."
+        blanks="__oo_y"
+        showBlanks={true}
+      />
+      <UsageAndBlanks
+        usage="The sky loomed dark and ______."
+        blanks="gloomy"
+        showBlanks={false}
+      />
+    </div>
+  ));
+
+storiesOf("Gallows", module)
+  .add("Gallows description", () => (
+    <div>
+      <h2>Gallows(badGuesses)</h2>
+      <ul>
+        <li>badGuesses - number (0 to 6) of parts to draw</li>
+      </ul>
+      <Gallows />
+    </div>
+  ))
+  .add("Gallows gallery", () => (
+    <div>
+      <Gallows badGuesses={6} />
+      <Gallows badGuesses={5} />
+      <Gallows badGuesses={4} />
+      <Gallows badGuesses={3} />
+      <Gallows badGuesses={2} />
+      <Gallows badGuesses={1} />
+      <Gallows badGuesses={0} />
+    </div>
   ));
