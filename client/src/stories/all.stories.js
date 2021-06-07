@@ -154,12 +154,12 @@ storiesOf("Gallows", module)
   ))
   .add("Gallows gallery", () => (
     <div>
-      <Gallows badGuesses={6} />
-      <Gallows badGuesses={5} />
-      <Gallows badGuesses={4} />
-      <Gallows badGuesses={3} />
-      <Gallows badGuesses={2} />
-      <Gallows badGuesses={1} />
       <Gallows badGuesses={0} />
+      <Gallows badGuesses={1} />
+      <Gallows badGuesses={2} />
+      <Gallows badGuesses={3} />
+      <Gallows badGuesses={4} />
+      <Gallows badGuesses={5} />
+      <Gallows badGuesses={6} />
     </div>
   ));

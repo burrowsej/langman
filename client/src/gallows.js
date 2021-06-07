@@ -4,13 +4,22 @@ import styled from "styled-components";
 const GallowsCanvas = styled.canvas`
   padding: 10px;
 `;
+
 class Gallows extends Component {
+  constructor(props) {
+    super(props);
+    this.canvasRef = React.createRef();
+  };
+  
   componentDidMount() {
     this.componentDidUpdate();
+    const canvas = this.canvasRef.current;
+    const context = canvas.getContext('2d');
   };
 
   componentDidUpdate() {
-    const ctx = this.context;
+    const canvas = this.canvasRef.current;
+    const ctx = canvas.getContext('2d');
     ctx.fillRect(0, 290, 200, 10); // base line
     ctx.fillRect(20, 0, 10, 300); // vertical line
     ctx.fillRect(20, 0, 100, 10); //top line
@@ -62,7 +71,7 @@ class Gallows extends Component {
   render() {
     return (
       <GallowsCanvas
-        ref={(c) => (this.context = c.getContext("2d"))}
+        ref={this.canvasRef}
         width={200}
         height={300}
       />
